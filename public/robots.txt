@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Bloquer les pages sensibles futures
+Disallow: /api/
+Disallow: /checkout/success
+Disallow: /admin/
+Disallow: /account/
+
+# Sitemap
+Sitemap: https://orthea.ch/sitemap.xml

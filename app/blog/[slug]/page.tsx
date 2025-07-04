@@ -3,14 +3,19 @@ import { notFound } from 'next/navigation'
 import { Calendar, Clock, User, ArrowLeft, Tag } from 'lucide-react'
 import { getBlogPost, getRelatedPosts } from '@/lib/blog-posts'
 
-export default function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = getBlogPost(params.slug)
+export default async function BlogPostPage({ 
+  params 
+}: { 
+  params: Promise<{ slug: string }> 
+}) {
+  const { slug } = await params
+  const post = getBlogPost(slug)
   
   if (!post) {
     notFound()
   }
 
-  const relatedPosts = getRelatedPosts(params.slug, 2)
+  const relatedPosts = getRelatedPosts(slug, 2)
 
   return (
     <div className="min-h-screen bg-porcelain">
