@@ -1,6 +1,9 @@
+'use client'
+
 import React from "react";
 import Link from "next/link";
 import Button from "./Button";
+import { useCart } from "@/lib/contexts/CartContext";
 
 interface ProductCardProps {
   id?: string;
@@ -13,6 +16,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
+  id,
   name,
   description,
   price,
@@ -20,6 +24,22 @@ const ProductCard: React.FC<ProductCardProps> = ({
   category,
   origin,
 }) => {
+  const { addItem } = useCart();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (id) {
+      addItem({
+        id,
+        name,
+        price,
+        description,
+      });
+    }
+  };
+
   const CardContent = (
     <>
       <div className="h-64 bg-gradient-to-br from-orthea-tea-rose to-orthea-porcelain flex items-center justify-center">
@@ -46,7 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <span className="font-display text-2xl text-orthea-gold">
             {price} CHF
           </span>
-          <Button size="sm">
+          <Button size="sm" onClick={handleAddToCart}>
             Ajouter
           </Button>
         </div>

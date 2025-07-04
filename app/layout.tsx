@@ -1,35 +1,32 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Montserrat, Crimson_Text, Dancing_Script } from "next/font/google";
 import "./globals.css";
+import { CartProvider } from "@/lib/contexts/CartContext";
 
-const playfairDisplay = Playfair_Display({
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  display: "swap",
   variable: "--font-playfair",
 });
 
 const montserrat = Montserrat({
   subsets: ["latin"],
-  display: "swap",
   variable: "--font-montserrat",
 });
 
-const crimsonText = Crimson_Text({
+const crimson = Crimson_Text({
+  weight: ["400", "600", "700"],
   subsets: ["latin"],
-  weight: ["400", "600"],
-  display: "swap",
   variable: "--font-crimson",
 });
 
-const dancingScript = Dancing_Script({
+const dancing = Dancing_Script({
   subsets: ["latin"],
-  display: "swap",
   variable: "--font-dancing",
 });
 
 export const metadata: Metadata = {
   title: "Orthéa - L'Orient rencontre la Suisse",
-  description: "Découvrez l'excellence du thé oriental sublimée par la précision suisse. Thés premium accessibles à tous.",
+  description: "Découvrez l'excellence du thé oriental sublimée par la précision suisse. Des thés d'exception à prix accessibles.",
   keywords: "thé, thé oriental, thé suisse, thé premium, Orthéa, thé de luxe accessible",
   authors: [{ name: "Orthéa" }],
   openGraph: {
@@ -63,16 +60,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <html
-      lang="fr"
-      className={`${playfairDisplay.variable} ${montserrat.variable} ${crimsonText.variable} ${dancingScript.variable}`}
-    >
-      <body className="antialiased scrollbar-thin">
-        {children}
+    <html lang="fr">
+      <body className={`${playfair.variable} ${montserrat.variable} ${crimson.variable} ${dancing.variable}`}>
+        <CartProvider>
+          {children}
+        </CartProvider>
       </body>
     </html>
   );
