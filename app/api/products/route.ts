@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { Prisma } from '@/lib/generated/prisma'
 
 export async function GET(request: Request) {
   try {
@@ -13,7 +14,7 @@ export async function GET(request: Request) {
     const featured = searchParams.get('featured')
     
     // Construire la requête
-    const where: any = {
+    const where: Prisma.ProductWhereInput = {
       isActive: true,
     }
     
@@ -28,7 +29,7 @@ export async function GET(request: Request) {
     }
     
     if (caffeineLevel) {
-      where.caffeineLevel = caffeineLevel.toUpperCase()
+      where.caffeineLevel = caffeineLevel.toUpperCase() as any
     }
     
     if (search) {
@@ -73,6 +74,7 @@ export async function GET(request: Request) {
         
         return {
           ...product,
+          price: product.price.toNumber(), // Convertir Decimal en number
           avgRating,
           reviewCount: product._count.reviews,
           soldCount: product._count.orderItems

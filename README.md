@@ -71,13 +71,15 @@ Le site sera accessible sur `http://localhost:3000`
 - [ ] Protection des routes privées
 - [ ] Page compte utilisateur
 
-### Phase 2 : Base de Données (En Cours) 🚧
+### Phase 2 : Base de Données ✅ (Complétée)
 - [x] Configuration Prisma + PostgreSQL
 - [x] Schémas complets créés (User, Product, Order, Cart, Review, etc.)
 - [x] Script de seed pour migration des données
 - [x] API Routes de base (products)
-- [ ] Configuration Supabase et migration réelle
+- [x] Configuration Supabase et migration réelle
+- [x] Base de données peuplée avec données de test
 - [ ] API Routes complètes (orders, cart, reviews)
+- [ ] Migration du frontend pour utiliser la BDD
 
 ### Phase 3 : Intégration Paiement (Priorité Haute)
 - [ ] Stripe ou PayPal integration

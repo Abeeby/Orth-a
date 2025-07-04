@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '../lib/generated/prisma'
 import { products } from '../lib/products'
 
 const prisma = new PrismaClient()
@@ -131,7 +131,7 @@ async function main() {
   const orderProducts = await prisma.product.findMany({ take: 2 })
   let subtotalAmount = 0
   
-  const orderItemsData = orderProducts.map((product) => {
+  const orderItemsData = orderProducts.map((product: any) => {
     const quantity = 2
     const price = Number(product.price)
     const total = price * quantity
