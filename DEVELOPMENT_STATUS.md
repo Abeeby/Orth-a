@@ -1,107 +1,124 @@
-# Statut du Développement - Orthéa
+# État du Développement Orthéa
 
-## 🎯 Résumé des Corrections et Implémentations
+## ✅ Complété
 
-### 1. ✅ Problème Tailwind CSS Résolu
-- **Problème initial** : Tailwind CSS v4.1.11 (version expérimentale) causait des erreurs de build
-- **Solution** : Rétrogradé vers Tailwind CSS v3.4.1 (version stable)
-- **Résultat** : Les styles s'appliquent correctement maintenant
+### 1. **Configuration Initiale**
+- [x] Next.js 14 avec App Router
+- [x] TypeScript
+- [x] Tailwind CSS (corrigé v3.3.7)
+- [x] Structure de dossiers
 
-### 2. ✅ Système de Panier Complet
-- **Context API** : `CartContext` pour gérer l'état global du panier
-- **Persistance** : Sauvegarde automatique dans localStorage
-- **Composants créés** :
-  - `CartIcon` : Icône avec badge du nombre d'articles
-  - `CartDrawer` : Panneau latéral pour visualiser et gérer le panier
-- **Fonctionnalités** :
-  - Ajouter/retirer des produits
-  - Modifier les quantités
-  - Calculer les totaux automatiquement
-  - Vider le panier
+### 2. **Composants de Base**
+- [x] Header/NavBar avec menu responsive
+- [x] Footer
+- [x] MainLayout
+- [x] Button component
+- [x] ProductCard
 
-### 3. ✅ Navigation et Layout
-- **NavBar** : Barre de navigation responsive avec intégration du panier
-- **MainLayout** : Layout réutilisable pour toutes les pages internes
-- **Mobile** : Menu hamburger fonctionnel pour mobile
+### 3. **Pages**
+- [x] Page d'accueil avec sections hero et features
+- [x] Page boutique avec filtres et recherche
+- [x] Page checkout
+- [x] Page de confirmation de commande
+- [x] Page produit individuel
 
-### 4. ✅ Pages E-commerce
-- **Page Boutique améliorée** :
-  - Intégration du bouton "Ajouter au panier" sur chaque produit
-  - Les filtres et la recherche fonctionnent
-  - Layout avec NavBar et Footer
-- **Page Checkout** :
-  - Formulaire complet avec validation
-  - Sections : Informations personnelles, Adresse, Paiement
-  - Résumé de commande en temps réel
-  - Simulation de traitement de paiement
-- **Page de Confirmation** :
-  - Message de succès avec animations
-  - Numéro de commande généré
-  - Options de navigation
+### 4. **Fonctionnalités E-commerce**
+- [x] Système de panier complet (Context API + localStorage)
+- [x] CartIcon avec badge
+- [x] CartDrawer panneau latéral
+- [x] Gestion des quantités
+- [x] Calcul automatique des totaux
 
-## 📁 Fichiers Créés/Modifiés
+### 5. **Déploiement**
+- [x] Déployé sur Vercel
+- [x] URL : https://orth-a.vercel.app/
+- [x] Fix PostCSS/Tailwind pour Vercel
 
-### Nouveaux fichiers :
-1. `lib/contexts/CartContext.tsx` - Gestion globale du panier
-2. `components/ui/CartIcon.tsx` - Icône du panier avec compteur
-3. `components/ui/CartDrawer.tsx` - Panneau latéral du panier
-4. `components/layout/NavBar.tsx` - Barre de navigation principale
-5. `components/layout/MainLayout.tsx` - Layout principal des pages
-6. `app/checkout/page.tsx` - Page de checkout
-7. `app/checkout/success/page.tsx` - Page de confirmation
+### 6. **Base de Données (Phase 2)**
+- [x] Prisma configuré avec PostgreSQL
+- [x] Schéma complet créé :
+  - User (avec rôles admin/user)
+  - Product (avec images, catégories, etc.)
+  - Order & OrderItem
+  - Cart & CartItem
+  - Review (système d'avis)
+  - Favorite (favoris)
+  - Address (adresses de livraison)
+  - Newsletter (inscriptions)
+- [x] Script de seed pour peupler la BDD
+- [x] API Routes de base créées :
+  - `/api/products` - Liste des produits avec filtres
+  - `/api/products/[slug]` - Détail d'un produit
+- [x] Documentation de configuration (DATABASE_SETUP.md)
 
-### Fichiers modifiés :
-1. `tailwind.config.ts` - Configuration corrigée
-2. `postcss.config.js` - Syntaxe mise à jour
-3. `app/layout.tsx` - Ajout du CartProvider
-4. `components/ui/ProductCard.tsx` - Intégration du panier
-5. `app/boutique/page.tsx` - Ajout du MainLayout et passage de l'id
+## � En Cours
 
-## 🚀 Comment Tester
+### Base de Données - Suite
+- [ ] Créer le compte Supabase et configurer la BDD
+- [ ] Exécuter les migrations
+- [ ] Tester le seed avec de vraies données
+- [ ] Créer plus d'API routes (orders, cart, reviews)
 
-1. **Ajouter des produits au panier** :
-   - Aller sur `/boutique`
-   - Cliquer sur "Ajouter" sur n'importe quel produit
-   - Le badge du panier se met à jour
+## 📋 À Faire
 
-2. **Gérer le panier** :
-   - Cliquer sur l'icône du panier en haut à droite
-   - Modifier les quantités avec +/-
-   - Supprimer des articles avec X
-   - Vider tout le panier
+### Phase 1 : Authentification (Priorité Haute)
+- [ ] NextAuth.js ou Clerk
+- [ ] Pages login/register
+- [ ] Gestion des sessions
+- [ ] Protection des routes
+- [ ] Page compte utilisateur
 
-3. **Passer commande** :
-   - Depuis le panier, cliquer sur "Passer Commande"
-   - Remplir le formulaire (données de test acceptées)
-   - Valider pour voir la page de confirmation
+### Phase 3 : Paiement Réel
+- [ ] Intégration Stripe
+- [ ] Webhooks de paiement
+- [ ] Gestion des erreurs
+- [ ] Factures PDF
 
-## 🔄 Prochaines Priorités
+### Phase 4 : Fonctionnalités Avancées
+- [ ] Système de favoris (UI + persistance BDD)
+- [ ] Avis et notations (UI + API)
+- [ ] Newsletter avec SendGrid
+- [ ] Historique des commandes
+- [ ] Recherche avancée avec filtres multiples
 
-1. **Base de données** : Migrer les produits vers une vraie BDD
-2. **Authentification** : Permettre aux utilisateurs de créer un compte
-3. **Paiement réel** : Intégrer Stripe ou PayPal
-4. **Emails** : Envoyer des confirmations de commande
+### Phase 5 : Optimisations
+- [ ] Images optimisées avec next/image
+- [ ] Lazy loading des produits
+- [ ] Cache API avec SWR ou React Query
+- [ ] SEO : meta tags dynamiques, sitemap
+- [ ] Google Analytics 4
 
-## 🐛 Points d'Attention
+### Phase 6 : Mobile & PWA
+- [ ] Progressive Web App
+- [ ] Notifications push
+- [ ] Mode hors ligne partiel
 
-- Le paiement est simulé (pas de traitement réel)
-- Les numéros de commande sont générés aléatoirement
-- Pas de validation côté serveur pour le moment
-- Les données utilisateur ne sont pas sauvegardées
+## � Bugs Connus
 
-## ✨ Améliorations Possibles
+1. ~~Tailwind CSS v4 incompatible avec Vercel~~ ✅ Résolu
+2. Types TypeScript dans seed.ts (non bloquant)
 
-1. **UX** :
-   - Notifications toast lors de l'ajout au panier
-   - Animation de l'icône panier lors de l'ajout
-   - Indicateur de chargement pendant le checkout
+## 📝 Notes Techniques
 
-2. **Fonctionnalités** :
-   - Codes promo
-   - Calcul des frais de port selon la localisation
-   - Sauvegarde des adresses pour les utilisateurs connectés
+### Configuration Tailwind
+- Version 3.3.7 pour compatibilité Vercel
+- PostCSS config adaptée pour Next.js 15
+- Toutes les dépendances CSS en `dependencies` (pas `devDependencies`)
 
-3. **Performance** :
-   - Optimiser les images avec next/image
-   - Lazy loading des composants
-   - Mise en cache des données produits
+### Base de Données
+- Prisma avec PostgreSQL (via Supabase recommandé)
+- Schéma complet prêt pour un vrai e-commerce
+- Support des relations complexes (favoris, avis, etc.)
+
+### API Design
+- Routes RESTful dans `/api`
+- Gestion des erreurs standardisée
+- Support des filtres et pagination prévu
+
+## 🎯 Prochaines Priorités
+
+1. **Configurer Supabase** et migrer la BDD
+2. **Créer les pages produits dynamiques** qui utilisent l'API
+3. **Implémenter l'authentification** avec NextAuth.js
+4. **Migrer le panier** de localStorage vers la BDD
+5. **Intégrer Stripe** pour les paiements réels

@@ -1,0 +1,266 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Modèle Utilisateur
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String?   // Null pour les connexions OAuth
+  image         String?
+  emailVerified DateTime?
+  role          Role      @default(USER)
+  
+  // Relations
+  orders        Order[]
+  cart          Cart?
+  favorites     Favorite[]
+  reviews       Review[]
+  addresses     Address[]
+  
+  // Timestamps
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+// Modèle Produit
+model Product {
+  id              String   @id @default(cuid())
+  name            String
+  slug            String   @unique
+  description     String
+  longDescription String?
+  price           Decimal  @db.Decimal(10, 2)
+  stock           Int      @default(0)
+  sku             String   @unique
+  
+  // Détails du thé
+  category        String
+  origin          String
+  brewingTemp     Int
+  brewingTime     String
+  caffeineLevel   CaffeineLevel
+  flavor          String[]
+  benefits        String[]
+  
+  // Images
+  images          ProductImage[]
+  
+  // Relations
+  orderItems      OrderItem[]
+  cartItems       CartItem[]
+  favorites       Favorite[]
+  reviews         Review[]
+  
+  // Statut
+  isActive        Boolean  @default(true)
+  isFeatured      Boolean  @default(false)
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([slug])
+  @@index([category])
+}
+
+enum CaffeineLevel {
+  NONE
+  LOW
+  MEDIUM
+  HIGH
+}
+
+// Images produits
+model ProductImage {
+  id        String   @id @default(cuid())
+  url       String
+  alt       String?
+  order     Int      @default(0)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Modèle Commande
+model Order {
+  id                String      @id @default(cuid())
+  orderNumber       String      @unique @default(cuid())
+  userId            String?
+  user              User?       @relation(fields: [userId], references: [id])
+  
+  // Informations client (pour les commandes invités)
+  customerEmail     String
+  customerName      String
+  customerPhone     String?
+  
+  // Adresse de livraison
+  shippingAddress   Json
+  billingAddress    Json?
+  
+  // Détails de la commande
+  items             OrderItem[]
+  subtotal          Decimal     @db.Decimal(10, 2)
+  shipping          Decimal     @db.Decimal(10, 2) @default(0)
+  tax               Decimal     @db.Decimal(10, 2) @default(0)
+  total             Decimal     @db.Decimal(10, 2)
+  
+  // Paiement
+  paymentMethod     String?
+  paymentIntentId   String?     @unique
+  paymentStatus     PaymentStatus @default(PENDING)
+  
+  // Statut
+  status            OrderStatus @default(PENDING)
+  notes             String?
+  
+  // Timestamps
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  
+  @@index([orderNumber])
+  @@index([userId])
+  @@index([customerEmail])
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+// Articles de commande
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  
+  quantity  Int
+  price     Decimal  @db.Decimal(10, 2)
+  total     Decimal  @db.Decimal(10, 2)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Panier
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id])
+  items     CartItem[]
+  
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+// Articles du panier
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  
+  quantity  Int
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([cartId, productId])
+}
+
+// Favoris
+model Favorite {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@unique([userId, productId])
+}
+
+// Avis produits
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  rating    Int      // 1-5
+  title     String?
+  comment   String?
+  verified  Boolean  @default(false) // Achat vérifié
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([userId, productId])
+}
+
+// Adresses
+model Address {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  name          String
+  addressLine1  String
+  addressLine2  String?
+  city          String
+  postalCode    String
+  country       String   @default("CH")
+  phone         String?
+  
+  isDefault     Boolean  @default(false)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+// Newsletter
+model Newsletter {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  active    Boolean  @default(true)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
